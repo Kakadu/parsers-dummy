@@ -18,12 +18,12 @@ let () =
     set c
   )
   *)
-let options = { filename="expr2.e"; with_yacc=false; with_ostap=true }
+let options = { filename="expr2.e"; with_yacc=false; with_ostap=false }
 
 let () =
   Arg.parse [ ("-f", Arg.String (fun s -> options.filename <- s), "input file name")
             ; ("-yacc", Arg.Unit(fun ()-> options.with_yacc<- true), "exectute yacc parsing")
-            ; ("-noostap", Arg.Unit (fun () -> options.with_ostap <- false), "don't execute ostap parsing")
+            ; ("-comb", Arg.Unit (fun () -> options.with_ostap <- true), "execute combinator parsing")
             ]
     (fun _ -> failwith "Anonymous arguments are not supported")
     "usage msg"
@@ -31,7 +31,7 @@ let () =
 let () = printf "Using input file '%s'\n%!" options.filename
 
 (** Executing YACC printing *)
-let () = if options.with_yacc then begin
+let run_yacc () = if options.with_yacc then begin
   print_endline "\n============================= YACC parsing and printing ...\n";
   print_endline ("using output file " ^ yacc_output_file);
   let ch = open_in options.filename in
@@ -54,9 +54,10 @@ open HackParserLifting
 
 (** Executing combinator printing *)
 let run_comb () = if options.with_ostap then begin
-    print_endline "\n============================= Hack parsing and printing...\n";
+    print_endline "\n============================= Hack parsing and printing...";
     let source  = read options.filename in
     printf "Input length: %d\n" (String.length source);
+    printf "output in %s\n"  hack_output_file;
 
     let do_parse, lexer_time = program source  in
     let ans, parser_time    = eval_time_2 do_parse in
@@ -64,7 +65,6 @@ let run_comb () = if options.with_ostap then begin
       | Comb.Parsed (xs,_) ->
         with_file hack_output_file
           (fun ch -> xs |! List.map Ostap.Pretty.toString |! List.iter (fprintf ch "%s\n"));
-        printf "output in %s\n"  hack_output_file;
         printf "action hack parsing tooks %f time (%f lexer + %f parsing)\n%!"
           (lexer_time +. parser_time) lexer_time parser_time;
         flush stdout
@@ -79,10 +79,8 @@ let clear_caches () =
 
 let () =
   clear_caches ();
-  Gc.full_major ();
-  run_comb ();
+  run_yacc ();
   clear_caches ();
-  Gc.full_major ();
   run_comb ()
 
 
