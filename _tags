@@ -2,6 +2,6 @@ true: threads, package(unix)
 #<*.ml>: pp(camlp5o pa_checked.cmo pa_ostap.cmo pa_log.cmo)
 #true: debug
 #true: inline(5)
-true: verbose
+true: verbose, S
 <pretty.cmx>: for-pack(Ostap)
 

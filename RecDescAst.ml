@@ -9,6 +9,13 @@ let nextToken () = incr scanner
 let curToken () = !data.(!scanner)
 let finished () = !scanner >= !data_len
 
+let rec line0 () = if false then line0 () else ()
+let rec line1 () = if false then line1 () else ()
+let rec line2 () = if false then line2 () else ()
+let rec line3 () = if false then line3 () else ()
+let rec line4 () = if false then line4 () else ()
+
+
 let rec arguments acc =
   let l = expr () in
   match curToken () with
@@ -35,6 +42,7 @@ and primary () =
            | (ExprYaccAst.LPAREN,_,_,_) ->
              nextToken (); nextToken (); (*
              let () = printf "before `arguments` curpos = %d\n%!" !scanner in *)
+	     line0 ();
              let args = arguments [] in (*
              let () = printf "arguments finished. curpos = %d\n%!" !scanner in *)
              begin

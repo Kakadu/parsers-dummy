@@ -1,5 +1,11 @@
 open Printf
 
+let rec line0 () = if false then line0 () else ()
+let rec line1 () = if false then line1 () else ()
+let rec line2 () = if false then line2 () else ()
+let rec line3 () = if false then line3 () else ()
+let rec line4 () = if false then line4 () else ()
+let rec line15 () = if false then line15 () else  ()
 
 module Comb = struct
   type stream = int
@@ -115,8 +121,10 @@ let expr_in_bra =
 let fun_call_p''''  fname args _ =
   Ast.Call (fname, args)
 
-let fun_call_p'''  fname args =
-  rbra                --> fun_call_p'''' fname args
+let fun_call_p'''  fname args s =
+  line15 ();	
+  (rbra                --> fun_call_p'''' fname args) s
+
 let fun_call_p''  fname _ =
   (list0 !expr_ comma) |> (fun_call_p''' fname)
 let fun_call_p' fname =

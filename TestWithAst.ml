@@ -65,8 +65,8 @@ let run_comb () = if options.with_comb then begin
     printf "output in %s\n"  comb_output_file;
 
     let do_parse, lexer_time = program source  in
-    let (ans, parser_time)   = eval_time_2 do_parse in
-
+    let (ans, parser_time)   = eval_time_2 do_parse in 
+    Gc.compact (); 
     match ans with
       | Comb.Parsed(xs,_) ->
         printf "action 'combinator parsing' tooks %f time (%f lexer + %f parsing)\n%!"
